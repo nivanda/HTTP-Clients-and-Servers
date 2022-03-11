@@ -23,8 +23,15 @@ def WeatherForecast():
         timeList[0] = str(int(timeList[0]) + 2)
         datetime = datetimeList[0] + 'T' + ':'.join(timeList) + ':'
         data = w['data']['instant']['details']
+        cloudData = None
+        if data["cloud_area_fraction"] < 40:
+            cloudData = "Clear sky"
+        if data["cloud_area_fraction"] >= 40 and data["cloud_area_fraction"] < 60:
+            cloudData = "Partially cloudy"
+        if data["cloud_area_fraction"] >= 60:
+            cloudData = "Cloudy"
 
-        WeatherString = datetime + " | Air pressure -> {} hPa | Temperature -> {} *C | Cloud area fraction -> {} % | Humidity -> {} % | Wind direction -> {}* | Wind speed -> {} m/s".format(data["air_pressure_at_sea_level"], data["air_temperature"], data["cloud_area_fraction"], data["relative_humidity"], data["wind_from_direction"], data["wind_speed"])
+        WeatherString = datetime + " | Air pressure -> {} hPa | Temperature -> {} *C | Sky -> {} | Humidity -> {} % | Wind direction -> {}* | Wind speed -> {} m/s".format(data["air_pressure_at_sea_level"], data["air_temperature"], cloudData, data["relative_humidity"], data["wind_from_direction"], data["wind_speed"])
         Output.append(WeatherString)
         
         if Count == 10:
@@ -35,4 +42,4 @@ def WeatherForecast():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host="192.168.0.29")
+    app.run()
